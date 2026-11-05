@@ -1,5 +1,29 @@
 # Spin to Win — a 3D prize wheel, as a Databricks App
 
+## Install (browser only: no terminal, no CLI, works air-gapped)
+
+Everything the app needs is in this repo: standard-library Python only. Two ways to install it; both use the `DEPLOY` notebook.
+
+### A) Install on its own (a standalone Databricks App)
+1. On this GitHub page: **Code → Download ZIP** (`spin-wheel-main.zip`). No need to unzip it.
+2. In Databricks: **Workspace** → a folder (e.g. your home) → **⋮ → Import** → drop the `.zip` → **Import**.
+   Databricks unzips it into `spin-wheel-main/`.
+3. Open **`spin-wheel-main/DEPLOY`**, attach **Serverless**, set **mode = `standalone`** (and `standalone_app_name`
+   if you want a different name), then **Run all**.
+4. The last cell prints the **app URL**.
+
+### B) Install as a child of the [App Catalog](https://github.com/The-Real-Jeremy/app-catalog)
+1. Install the App Catalog first (its README, same four steps), so `app-catalog-main/` is in your workspace.
+2. On this GitHub page: **Code → Download ZIP** (`spin-wheel-main.zip`).
+3. In Databricks: open **the same folder that holds `app-catalog-main/`** → **⋮ → Import** → drop the `.zip`.
+   It unzips into `spin-wheel-main/` next to the catalog.
+4. Open **`spin-wheel-main/DEPLOY`**, attach **Serverless**, leave **mode = `child`** (`catalog_folder` is filled in
+   for you), then **Run all**. It copies the app into the catalog's `child_apps/spin_wheel/`, adds the scopes the app
+   needs to the catalog app, and redeploys the catalog. The last cell prints `<catalog URL>/apps/spin_wheel/`.
+
+To update either way: import the new ZIP and run `DEPLOY` again. The previous copy is kept, never deleted.
+
+---
 
 A tilted, image-bearing prize wheel for a hosted event. The host presses **Spin**; the wheel accelerates to
 a cruising speed and holds there. The contestant walks up and presses **Stop**; the winner is drawn at that
@@ -40,23 +64,13 @@ DATABRICKS_CONFIG_PROFILE=<their-profile> databricks bundle deploy -t portable \
 ```
 
 ### Without the CLI (UI only, also air-gapped)
-The app is standard library only and has no `requirements.txt`, so nothing is downloaded at deploy.
-`app/app.yaml` is committed for exactly this:
-1. Import the `app/` folder into a workspace folder (Workspace → Import).
-2. Compute → Apps → Create app → custom. Give it a name, and keep the name: the prize list lives
-   under that app's service principal, so a renamed app starts empty.
-3. Deploy, with that folder as the source code path.
+See **Install** at the top: the `DEPLOY` notebook does both paths from the browser.
 
-### As a child of the [App Catalog](https://github.com/The-Real-Jeremy/app-catalog)
+### As a child of the [App Catalog](https://github.com/The-Real-Jeremy/app-catalog) (CLI alternative)
 ```bash
 rsync -a --exclude .git spin-wheel/ <app-catalog>/child_apps/spin_wheel/
 cd <app-catalog> && npm run deploy
 ```
-Or, with no CLI and no internet, copy the folder into `<catalog source folder>/child_apps/spin_wheel/`
-(Workspace → Import) and click **Deploy** on the catalog app. You can also build an install zip with
-the catalog's `scripts/build_airgap_packages.sh spin_wheel` and load it with its `install_catalog.py`
-notebook (see the catalog's `docs/AIRGAP.md`).
-
 The catalog finds the app root through `databricks.yml` (`app/`), runs `python app.py` on its own port
 under `/apps/spin_wheel/`, and takes the card text from `catalog.yaml`. Inside the catalog the prizes
 are stored under the **catalog's** service principal, so they are separate from a standalone deployment's.
