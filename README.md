@@ -21,6 +21,11 @@ Everything the app needs is in this repo: standard-library Python only. Two ways
    for you), then **Run all**. It copies the app into the catalog's `child_apps/spin_wheel/`, adds the scopes the app
    needs to the catalog app, and redeploys the catalog. The last cell prints `<catalog URL>/apps/spin_wheel/`.
 
+**Budget policies:** child mode never creates an app; it redeploys the existing catalog, so a workspace policy
+requirement cannot stop it. For standalone mode in a workspace that requires a budget policy, set the
+`budget_policy_id` widget, or create the app in the UI first (pick the policy, add the scopes this app needs), then
+Run all.
+
 To update either way: import the new ZIP and run `DEPLOY` again. The previous copy is kept, never deleted.
 
 ---
