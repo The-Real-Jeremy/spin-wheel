@@ -134,8 +134,13 @@ if MODE == "child":
     print("\nCATALOG URL:", url)
     print("THIS APP   :", f"{url}/apps/{CHILD}/")
     st, body = try_get(f"{url}/_catalog/api/health")
-    if st == 200:
-        h = json.loads(body)
+    h = None
+    if st == 200 and body.lstrip().startswith("{"):   # the Apps proxy may answer the notebook's token with a sign-in page
+        try:
+            h = json.loads(body)
+        except ValueError:
+            h = None
+    if h is not None:
         mine = [c for c in h.get("children", []) if c["name"] == CHILD]
         print("health: offline =", h.get("offline"), "|", CHILD, "→", mine[0].get("prepare") if mine else "NOT FOUND", mine[0].get("problems") if mine else "")
     else:
@@ -148,4 +153,5 @@ else:
     url = a.get("url")
     print("\nAPP URL:", url)
     st, body = try_get(f"{url}/api/health")
-    print("health:", st if st else "(open the URL in the browser)", (body or "")[:200] if st else "")
+    ok = st == 200 and not (body or "").lstrip().lower().startswith("<!doctype")
+    print("health:", (body or "")[:200] if ok else "(open the URL in the browser to check it)")
