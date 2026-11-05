@@ -1,3 +1,3 @@
-# Card metadata when this app runs as a child of the App-ception (ignored standalone).
+# Card metadata when this app runs as a child of App-ception (ignored standalone).
 title: Spin to Win
 description: A 3D prize wheel. The operator stops it and the prize is drawn at the stop press; prizes and pictures are kept in the app service principal's own workspace folder.
