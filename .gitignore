@@ -1,0 +1,12 @@
+# Bundle state: holds workspace ids AND sync-snapshots. A tracked snapshot makes a fresh
+# clone believe files are already uploaded, and the next deploy silently skips them.
+.databricks/
+__pycache__/
+*.pyc
+.DS_Store
+# Local-only secrets and scratch
+.settings_password
+/tmp-*
+/shots/
+# written by tools/assert_panel_agrees.mjs
+evidence/

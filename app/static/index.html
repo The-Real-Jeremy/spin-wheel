@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spin to Win</title>
+<!-- Vendored and same-origin, every one. No CDN, no web font: a blocked host does not fail fast, it
+     hangs, and a page that paints nothing in front of an audience is the worst outcome available. -->
+<link rel="stylesheet" href="/static/css/app.css">
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<header class="top">
+  <div class="top__brand">
+    <span class="top__mark" aria-hidden="true"></span>
+    <h1 id="event-name">Spin to Win</h1>
+  </div>
+  <nav class="top__actions">
+    <button id="sound" class="btn btn--ghost" type="button" aria-pressed="false">
+      <span class="label">Sound off</span>
+    </button>
+    <button id="fullscreen" class="btn btn--ghost" type="button">Full screen</button>
+    <a class="btn btn--ghost" href="/settings">Settings</a>
+  </nav>
+</header>
+
+<div id="banners" class="banners" role="status" aria-live="polite"></div>
+
+<main class="stage">
+  <section class="wheel-pane">
+    <canvas id="wheel" class="wheel" aria-label="Prize wheel"></canvas>
+    <!-- ONE morphing primary button: it says SPIN when idle and STOP while the wheel is turning, so the
+         contestant walking up to the laptop sees the word they need and nothing else. The state pill next
+         to it means whoever is running the game never has to guess whether a press registered. -->
+    <div class="spin-row">
+      <div class="spin-row__controls">
+        <button id="primary" class="btn btn--spin" type="button" data-action="spin">Spin</button>
+        <span id="state" class="state-pill" data-state="idle" role="status" aria-live="polite">Idle</span>
+        <button id="reset" class="btn btn--ghost" type="button">Reset</button>
+      </div>
+      <p id="spin-hint" class="hint">Press Spin, then press Stop when the contestant is ready.</p>
+    </div>
+  </section>
+
+  <aside class="prize-pane">
+    <!-- The panel is driven by the wheel's rotation, every frame. See static/js/game.js. -->
+    <p class="prize-pane__kicker">Pointing at</p>
+    <canvas id="panel" class="panel" aria-label="The prize the pointer is currently over"></canvas>
+    <div id="panel-meta" class="panel-meta">
+      <h2 id="panel-name">—</h2>
+      <p id="panel-odds"></p>
+    </div>
+    <div id="result" class="result" role="status" aria-live="assertive"></div>
+  </aside>
+</main>
+
+<footer class="bottom">
+  <section class="bottom__block">
+    <h3>Prizes &amp; odds</h3>
+    <ul id="odds" class="odds"></ul>
+  </section>
+  <section class="bottom__block">
+    <h3>Recent spins</h3>
+    <ul id="recent" class="recent"></ul>
+  </section>
+</footer>
+
+<canvas id="confetti" class="confetti" aria-hidden="true"></canvas>
+<script type="module" src="/static/js/game.js"></script>
+</body>
+</html>

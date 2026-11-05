@@ -1,0 +1,146 @@
+/* The settings page. Loaded after app.css and reuses its tokens, so there is one palette. */
+
+/* ⛔ THIS ONE LINE IS LOAD-BEARING. `[hidden]` works through the UA stylesheet's `display: none`, which
+ *    ANY author `display` rule beats — so `.gate { display: grid }` left the password card on screen after
+ *    unlocking, with the editor below it. The DOM said `hidden === true` the whole time, which is why a
+ *    value check passed and only a SCREENSHOT caught it. */
+[hidden] { display: none !important; }
+
+.settings-body { overflow-y: auto; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field > span { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+
+input[type="text"], input[type="password"], input[type="number"] {
+  font: inherit; font-size: 15px;
+  color: var(--ink);
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  width: 100%;
+}
+input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+input[type="color"] {
+  appearance: none; border: 1px solid var(--line); border-radius: 8px;
+  width: 42px; height: 34px; padding: 2px; background: transparent; cursor: pointer;
+}
+
+/* ── the editor ─────────────────────────────────────────────────────────────────────────────────── */
+.editor { position: relative; z-index: 1; padding: 6px clamp(14px, 2.2vw, 32px) 40px; }
+.editor__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.8fr);
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 1080px) { .editor__grid { grid-template-columns: 1fr; } }
+
+.panel-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--card-2), var(--card));
+  padding: 16px 18px 18px;
+  margin-bottom: 16px;
+}
+.panel-card h2 { margin: 0 0 8px; font-size: 17px; font-weight: 740; letter-spacing: -0.01em; }
+.panel-card__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.panel-card__head h2 { margin: 0; }
+
+.explain { margin: 0 0 12px; color: var(--ink-dim); font-size: 13px; line-height: 1.5; }
+.explain strong { color: var(--ink); }
+
+.total {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 8px 6px 12px; border-radius: 999px;
+  border: 1px solid var(--line); background: rgba(0, 0, 0, 0.28);
+}
+.total__label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+.total strong { font-size: 17px; font-variant-numeric: tabular-nums; }
+.total--ok { border-color: rgba(53, 211, 154, 0.5); }
+.total--ok strong { color: var(--good); }
+.total--bad { border-color: rgba(255, 187, 61, 0.55); }
+.total--bad strong { color: var(--warn); }
+
+.btn--tiny { font-size: 12px; padding: 5px 10px; }
+.btn--danger { border-color: rgba(255, 107, 107, 0.45); color: #ffb3b3; }
+.btn--danger:hover { background: rgba(255, 107, 107, 0.14); }
+
+/* ── prize rows ─────────────────────────────────────────────────────────────────────────────────── */
+.prizes { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.prize {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.22);
+}
+.prize__thumb {
+  width: 62px; height: 62px; border-radius: 12px;
+  border: 1px solid var(--line); padding: 0; overflow: hidden; cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+  display: grid; place-items: center;
+}
+.prize__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.prize__thumb--empty span { font-size: 21px; font-weight: 800; color: rgba(255, 255, 255, 0.9); text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+.prize__thumb:hover { border-color: var(--accent); }
+
+.prize__fields { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.prize__name { font-weight: 650; }
+.prize__nums { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+.mini { display: flex; align-items: center; gap: 6px; }
+.mini > span { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-faint); }
+.mini input[type="number"] { width: 84px; padding: 7px 9px; font-size: 14px; }
+.mini em { font-size: 12px; color: var(--ink-faint); font-style: normal; }
+.prize__each { min-width: 8ch; }
+
+.prize__tools { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; max-width: 210px; }
+
+.editor__actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.save-status { margin: 10px 0 0; font-size: 13px; color: var(--ink-dim); min-height: 1.2em; }
+
+.problems { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.problem { font-size: 13px; line-height: 1.45; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); }
+.problem--bad { border-color: rgba(255, 107, 107, 0.5); background: rgba(255, 107, 107, 0.09); color: #ffc9c9; }
+.problem--warn { border-color: rgba(255, 187, 61, 0.4); background: rgba(255, 187, 61, 0.07); color: #ffe0a8; }
+
+/* ── preview & arrangement ──────────────────────────────────────────────────────────────────────── */
+.preview { width: 100%; height: 300px; display: block; }
+.arrangement { margin-top: 10px; }
+.arrangement__summary { margin: 0 0 10px; font-size: 13px; line-height: 1.5; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line); }
+.arrangement__summary--ok { border-color: rgba(53, 211, 154, 0.42); background: rgba(53, 211, 154, 0.08); color: #b9f2dc; }
+.arrangement__summary--warn { border-color: rgba(255, 187, 61, 0.42); background: rgba(255, 187, 61, 0.07); color: #ffe0a8; }
+.arrangement__summary--bad { border-color: rgba(255, 107, 107, 0.5); background: rgba(255, 107, 107, 0.09); color: #ffc9c9; }
+.arrangement__note { margin: 0; color: var(--ink-faint); font-size: 13px; }
+
+.gaps { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
+.gaps th {
+  text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-faint); padding: 4px 6px; border-bottom: 1px solid var(--line);
+}
+.gaps td { padding: 5px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); vertical-align: top; }
+.gaps td.dim, .gaps .dim { color: var(--ink-faint); }
+.gaps em { font-style: normal; font-size: 11px; }
+.gaps em.ok { color: var(--good); }
+.gaps em.off { color: var(--warn); }
+
+/* ── storage & log ──────────────────────────────────────────────────────────────────────────────── */
+.kv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; margin: 0 0 12px; font-size: 12.5px; }
+.kv dt { color: var(--ink-faint); font-weight: 600; }
+.kv dd { margin: 0; word-break: break-all; }
+.pre {
+  margin: 10px 0 0; padding: 10px; border-radius: 10px;
+  background: rgba(0, 0, 0, 0.42); border: 1px solid var(--line);
+  font-size: 11.5px; line-height: 1.45; white-space: pre-wrap; word-break: break-word;
+  max-height: 260px; overflow: auto; color: var(--ink-dim);
+}
+.log { margin: 0 0 12px; padding-left: 20px; font-size: 12.5px; display: flex; flex-direction: column; gap: 3px; max-height: 240px; overflow: auto; }
+.log .dim { color: var(--ink-faint); }

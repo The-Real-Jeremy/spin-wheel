@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wheel settings</title>
+<link rel="stylesheet" href="/static/css/app.css">
+<link rel="stylesheet" href="/static/css/settings.css">
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+</head>
+<body class="settings-body">
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<header class="top">
+  <div class="top__brand">
+    <span class="top__mark" aria-hidden="true"></span>
+    <h1>Wheel settings</h1>
+  </div>
+  <nav class="top__actions">
+    <a class="btn btn--ghost" href="/">Back to the wheel</a>
+  </nav>
+</header>
+
+<!-- ── the editor ───────────────────────────────────────────────────────────────────────────────── -->
+<main id="editor" class="editor">
+  <div id="banners" class="banners" role="status" aria-live="polite"></div>
+
+  <div class="editor__grid">
+    <section class="panel-card">
+      <div class="panel-card__head">
+        <h2>Prizes</h2>
+        <div class="total" id="total-box">
+          <span class="total__label">Total chance</span>
+          <strong id="total-value">0%</strong>
+          <button id="balance" class="btn btn--tiny" type="button">Balance to 100%</button>
+        </div>
+      </div>
+
+      <p class="explain">
+        <strong>Chance</strong> is how often that prize wins. <strong>Segments</strong> is how many pieces
+        of the wheel it is split into — a 50% prize split 3 ways becomes three segments of 16.67% each,
+        spread as evenly around the wheel as the other prizes allow, so half the wheel is not one block.
+      </p>
+
+      <ol id="prizes" class="prizes"></ol>
+
+      <div class="editor__actions">
+        <button id="add" class="btn" type="button">Add a prize</button>
+        <button id="save" class="btn btn--spin" type="button">Save</button>
+      </div>
+      <p id="save-status" class="save-status" role="status" aria-live="polite"></p>
+      <ul id="problems" class="problems"></ul>
+    </section>
+
+    <aside class="side">
+      <section class="panel-card">
+        <h2>Preview</h2>
+        <p class="explain">The wheel as these settings would build it, updated as you type.</p>
+        <canvas id="preview" class="preview" aria-label="Preview of the wheel"></canvas>
+        <div id="arrangement" class="arrangement"></div>
+      </section>
+
+      <section class="panel-card">
+        <h2>Where this is stored</h2>
+        <dl id="storage" class="kv"></dl>
+        <button id="selftest" class="btn btn--tiny" type="button">Test storage now</button>
+        <pre id="selftest-out" class="pre" hidden></pre>
+      </section>
+
+      <section class="panel-card">
+        <h2>Spin log</h2>
+        <p class="explain" id="log-count">—</p>
+        <ol id="log" class="log"></ol>
+        <button id="clear-log" class="btn btn--tiny btn--danger" type="button">Clear the log</button>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<script type="module" src="/static/js/settings.js"></script>
+</body>
+</html>

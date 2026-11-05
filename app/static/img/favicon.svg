@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Prize wheel">
+  <defs>
+    <clipPath id="c"><circle cx="32" cy="34" r="24"/></clipPath>
+  </defs>
+  <g clip-path="url(#c)">
+    <rect x="8" y="10" width="48" height="48" fill="#FF3621"/>
+    <path d="M32 34 L32 10 A24 24 0 0 1 56 34 Z" fill="#FFAB00"/>
+    <path d="M32 34 L56 34 A24 24 0 0 1 32 58 Z" fill="#00A972"/>
+    <path d="M32 34 L32 58 A24 24 0 0 1 8 34 Z" fill="#2272B4"/>
+  </g>
+  <circle cx="32" cy="34" r="24" fill="none" stroke="#fff" stroke-width="3"/>
+  <circle cx="32" cy="34" r="4.5" fill="#f2f4fa" stroke="#4a5068" stroke-width="1.5"/>
+  <path d="M32 14 L26 3 L38 3 Z" fill="#FFD34D" stroke="#8a5b00" stroke-width="1.2"/>
+</svg>

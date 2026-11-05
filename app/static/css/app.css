@@ -1,0 +1,310 @@
+/* SPIN TO WIN — one stylesheet, no web fonts, no CDN.
+ *
+ * Built for a projector or a big screen in a room with the lights down, so: a dark stage, one warm accent,
+ * generous type, and every moving thing animated with transform/opacity/filter only — never `left`, `top`,
+ * `width` or anything else that would put a spin on the layout path.
+ */
+
+:root {
+  --bg: #07080f;
+  --bg-2: #0d1020;
+  --ink: #f3f5fb;
+  --ink-dim: #a7aec6;
+  --ink-faint: #6f77a0;
+  --line: rgba(255, 255, 255, 0.10);
+  --card: rgba(255, 255, 255, 0.045);
+  --card-2: rgba(255, 255, 255, 0.075);
+  --accent: #ffc247;
+  --accent-2: #ff7a3c;
+  --good: #35d39a;
+  --warn: #ffbb3d;
+  --bad: #ff6b6b;
+  --info: #6aa9ff;
+  --radius: 18px;
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* ── the backdrop ───────────────────────────────────────────────────────────────────────────────────
+ * Three slow-drifting blobs. Animated with transform only, and each one is composited on its own layer,
+ * so this costs nothing during a spin. */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(1200px 700px at 50% -10%, #17203c 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 55%);
+}
+.aurora i {
+  position: absolute;
+  width: 46vw;
+  height: 46vw;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.42;
+  will-change: transform;
+}
+.aurora i:nth-child(1) { background: #3b2a7a; top: -12vw; left: -8vw; animation: drift1 26s ease-in-out infinite; }
+.aurora i:nth-child(2) { background: #7a2f4a; bottom: -16vw; right: -6vw; animation: drift2 31s ease-in-out infinite; }
+.aurora i:nth-child(3) { background: #1d5a6b; top: 30vh; right: 22vw; animation: drift3 37s ease-in-out infinite; }
+@keyframes drift1 { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(6vw,4vh,0) scale(1.12); } }
+@keyframes drift2 { 0%,100% { transform: translate3d(0,0,0) scale(1.05); } 50% { transform: translate3d(-5vw,-5vh,0) scale(1); } }
+@keyframes drift3 { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(-7vw,6vh,0) scale(1.1); } }
+
+/* ── chrome ─────────────────────────────────────────────────────────────────────────────────────── */
+.top, .banners, .stage, .bottom { position: relative; z-index: 1; }
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 28px 6px;
+  flex-wrap: wrap;
+}
+.top__brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.top__mark {
+  width: 30px; height: 30px; border-radius: 50%; flex: none;
+  background: conic-gradient(from 0deg, var(--accent), var(--accent-2), #c2445f, #6a5acd, var(--accent));
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08), 0 6px 18px rgba(255, 170, 60, 0.35);
+}
+.top h1 {
+  margin: 0;
+  font-size: clamp(19px, 2.2vw, 30px);
+  font-weight: 750;
+  letter-spacing: -0.015em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.top__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 15px;
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 140ms ease, transform 140ms ease, border-color 140ms ease;
+}
+.btn:hover { background: var(--card-2); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; transform: none; }
+.btn--ghost[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
+.btn--spin {
+  font-size: clamp(19px, 2vw, 25px);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 16px 46px;
+  border: none;
+  color: #2b1600;
+  background: linear-gradient(135deg, #ffe6a3, var(--accent) 38%, var(--accent-2));
+  box-shadow: 0 12px 34px rgba(255, 150, 60, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.btn--spin:not([disabled]) { animation: breathe 3.4s ease-in-out infinite; }
+.btn--spin:hover { transform: translateY(-2px) scale(1.02); }
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 12px 34px rgba(255, 150, 60, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+  50% { box-shadow: 0 16px 48px rgba(255, 170, 70, 0.62), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+}
+
+/* ── banners ────────────────────────────────────────────────────────────────────────────────────── */
+.banners { display: flex; flex-direction: column; gap: 8px; padding: 6px 28px 0; }
+.banner {
+  display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink-dim);
+}
+.banner strong { color: var(--ink); font-weight: 700; }
+.banner--bad { border-color: rgba(255, 107, 107, 0.5); background: rgba(255, 107, 107, 0.09); }
+.banner--warn { border-color: rgba(255, 187, 61, 0.42); background: rgba(255, 187, 61, 0.08); }
+.banner--info { border-color: rgba(106, 169, 255, 0.36); background: rgba(106, 169, 255, 0.07); }
+
+/* ── the stage ──────────────────────────────────────────────────────────────────────────────────── */
+/* ⛔ THE STAGE FILLS WHAT IS LEFT, IT DOES NOT ASSUME HOW MUCH THAT IS.
+ *    A fixed `height: min(72vh, …)` on the canvas pushed the SPIN button and the footer off the bottom as
+ *    soon as three banners were showing — and the banner count is not known at design time (an unconfigured
+ *    deployment shows three, a configured one shows none). So the stage is a flex child that takes the
+ *    remaining height, and the canvas FLEXES inside its pane. The wheel is then as big as the room allows
+ *    on any screen, from a 1440x900 projector to a 3440x1440 ultrawide, with nothing clipped. */
+.stage {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
+  gap: clamp(16px, 2.5vw, 44px);
+  align-items: stretch;
+  padding: 10px clamp(16px, 2.5vw, 36px) 12px;
+  min-height: 0;
+}
+
+.wheel-pane {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 12px; min-width: 0; min-height: 0;
+}
+/* ⛔ `flex: 1 1 0` AND NOT `1 1 auto`. A <canvas> has an INTRINSIC size from its width/height
+ *    attributes, and this code sets those to css-pixels x devicePixelRatio — so with an `auto` basis the
+ *    canvas told the layout it wanted to be ~1200px tall, the page overflowed by 222px on every screen
+ *    size tested, and the SPIN button sat below the fold. A zero basis makes the flex line decide the
+ *    height and the canvas follow, which also breaks the feedback loop (JS reads the laid-out height to
+ *    set the attribute that would otherwise drive it). */
+.wheel { flex: 1 1 0; width: 100%; height: auto; min-height: 240px; display: block; }
+.spin-row { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.spin-row__controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+/* The primary button changes COLOUR as well as label, so at a glance across a room it is obvious whether
+ * the wheel is waiting to be started or waiting to be stopped. */
+.btn--spin[data-action="stop"] {
+  color: #2b0505;
+  background: linear-gradient(135deg, #ffd9d0, #ff6b57 38%, #e03131);
+  box-shadow: 0 12px 34px rgba(224, 49, 49, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  animation: none;
+}
+
+.state-pill {
+  font-size: 12px; font-weight: 750; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 7px 13px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink-dim);
+  white-space: nowrap;
+}
+.state-pill[data-state="spinup"], .state-pill[data-state="cruise"] {
+  border-color: rgba(255, 194, 71, 0.6); color: var(--accent); background: rgba(255, 194, 71, 0.10);
+}
+.state-pill[data-state="cruise"] { animation: pulse 1.1s ease-in-out infinite; }
+.state-pill[data-state="stopping"] {
+  border-color: rgba(106, 169, 255, 0.55); color: var(--info); background: rgba(106, 169, 255, 0.10);
+}
+.state-pill[data-state="settled"] {
+  border-color: rgba(53, 211, 154, 0.55); color: var(--good); background: rgba(53, 211, 154, 0.10);
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+.hint { margin: 0; color: var(--ink-faint); font-size: 13.5px; min-height: 1.2em; }
+
+.prize-pane {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  min-height: 0;
+  padding: clamp(16px, 2vw, 26px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--card-2), var(--card));
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+  min-width: 0;
+}
+.prize-pane__kicker {
+  margin: 0;
+  font-size: 11.5px; font-weight: 750; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent);
+}
+.panel { width: 100%; max-width: min(440px, 46vh); height: auto; aspect-ratio: 1; display: block; flex: 0 0 auto; }
+.panel-meta { text-align: center; min-height: 4.2em; transition: opacity 120ms linear; will-change: filter; }
+.panel-meta h2 {
+  margin: 4px 0 2px;
+  font-size: clamp(21px, 2.4vw, 32px);
+  font-weight: 780;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+}
+.panel-meta p { margin: 0; color: var(--ink-dim); font-size: 13.5px; }
+
+.result { min-height: 0; text-align: center; opacity: 0; transform: translateY(8px) scale(0.96); transition: opacity 260ms ease, transform 320ms cubic-bezier(.2,.9,.25,1.2); }
+.result.is-shown { opacity: 1; transform: none; }
+.result__kicker { font-size: 11.5px; font-weight: 750; letter-spacing: 0.2em; text-transform: uppercase; color: var(--good); }
+.result__prize { font-size: clamp(22px, 2.6vw, 34px); font-weight: 820; letter-spacing: -0.02em; }
+.result__note, .result__mismatch { font-size: 12.5px; color: var(--warn); margin-top: 4px; line-height: 1.4; }
+.result__mismatch { color: var(--bad); font-weight: 600; }
+
+/* ── footer blocks ──────────────────────────────────────────────────────────────────────────────── */
+.bottom {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  padding: 4px clamp(16px, 2.5vw, 36px) 20px;
+}
+.bottom__block {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  padding: 9px 14px 11px;
+  min-width: 0;
+}
+.bottom__block h3 {
+  margin: 0 0 6px;
+  font-size: 11.5px; font-weight: 750; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+/* Chips on a wrapping row, not stacked rows: the footer is reference information and every pixel it takes
+ * is a pixel off the wheel's diameter. */
+.odds, .recent { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.odds__row, .recent__item {
+  display: flex; align-items: center; gap: 7px; font-size: 13px;
+  padding: 4px 10px 4px 8px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045); border: 1px solid var(--line);
+}
+.odds__chip, .recent__chip { width: 11px; height: 11px; border-radius: 3px; flex: none; box-shadow: 0 0 0 1px rgba(255,255,255,0.22); }
+.odds__name, .recent__name { max-width: 16ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.odds__pct { font-variant-numeric: tabular-nums; font-weight: 700; }
+.odds__split, .recent__at { color: var(--ink-faint); font-size: 12px; font-variant-numeric: tabular-nums; }
+.recent__empty { color: var(--ink-faint); font-size: 13px; }
+
+.confetti { position: fixed; inset: 0; z-index: 5; pointer-events: none; width: 100%; height: 100%; }
+
+/* ── narrow screens: the panel goes under the wheel rather than squeezing it ─────────────────────── */
+@media (max-width: 900px) {
+  .stage { grid-template-columns: 1fr; align-items: stretch; }
+  .wheel { height: min(52vh, 460px); }
+  .panel { max-width: 240px; }
+}
+
+/* ── short viewports (a 1440x900 laptop, a projector at 720p) ────────────────────────────────────────
+ * Measured: at 1440x820 the page overflowed by 72px because the prize card's own padding, meta block and
+ * result line do not scale with vh. Trimmed here rather than by shrinking the wheel, which is the thing
+ * the room is looking at. */
+@media (max-height: 900px) {
+  .prize-pane { padding: 12px; gap: 6px; }
+  .panel { max-width: min(340px, 36vh); }
+  .panel-meta { min-height: 3.3em; }
+  .panel-meta h2 { font-size: clamp(18px, 2.1vw, 26px); }
+  .banner { padding: 7px 12px; font-size: 12.5px; }
+  .bottom { padding-bottom: 12px; }
+  .btn--spin { padding: 13px 40px; }
+}
+
+/* ── respect a stated preference for less motion ────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .aurora i { animation: none; }
+  .btn--spin:not([disabled]) { animation: none; }
+  .btn, .result { transition: none; }
+}
