@@ -24,7 +24,7 @@ Everything the app needs is in this repo: standard-library Python only. Two ways
 **Budget policies:** child mode never creates an app; it redeploys the existing catalog, so a workspace policy
 requirement cannot stop it. For standalone mode in a workspace that requires a budget policy, set the
 `budget_policy_id` widget, or create the app in the UI first (pick the policy, add the scopes this app needs), then
-Run all.
+Run all. If exactly one policy is in use, it is picked automatically and the app bills against it; set `budget_policy_id` to choose explicitly.
 
 To update either way: import the new ZIP and run `DEPLOY` again. The previous copy is kept, never deleted.
 
