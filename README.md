@@ -26,7 +26,9 @@ requirement cannot stop it. For standalone mode in a workspace that requires a b
 `budget_policy_id` widget, or create the app in the UI first (pick the policy, add the scopes this app needs), then
 Run all. If exactly one policy is in use, it is picked automatically and the app bills against it; set `budget_policy_id` to choose explicitly.
 
-To update either way: import the new ZIP and run `DEPLOY` again. The previous copy is kept, never deleted.
+**To update** either way: first **rename or delete the existing `spin-wheel-main/` folder**. Importing a ZIP onto a
+folder that already exists is refused ("already exists"), and nothing is overwritten. Then import the new ZIP and run
+`DEPLOY` again. In child mode, the previous copy inside the catalog is kept as `.bak-child-…`.
 
 ---
 
