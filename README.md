@@ -12,7 +12,8 @@ Everything the app needs is in this repo: standard-library Python only. Two ways
    if you want a different name), then **Run all**.
 4. The last cell prints the **app URL**.
 
-### B) Install as a child of the [App-ception](https://github.com/The-Real-Jeremy/app-ception)
+### B) Install as a child of [App-ception](https://github.com/The-Real-Jeremy/app-ception)
+App-ception was called App Catalog. An older `app-catalog-main/` folder and an `app-catalog` app are found too.
 1. Install the App-ception first (its README, same four steps), so `app-ception-main/` is in your workspace.
 2. On this GitHub page: **Code → Download ZIP** (`spin-wheel-main.zip`).
 3. In Databricks: open **the same folder that holds `app-ception-main/`** → **⋮ → Import** → drop the `.zip`.
