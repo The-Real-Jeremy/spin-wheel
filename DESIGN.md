@@ -172,7 +172,7 @@ rig `apps deploy` preserved a local file while `apps stop` + `apps start` recrea
 wheel that is the worst available failure — the host configures ten prizes and their photos, something
 restarts the app, and the wheel comes up with placeholders. Nothing errors.
 
-So the store is `/Users/<DATABRICKS_CLIENT_ID>/prize-wheel-state/`, written as the app's own service
+So the store is `/Users/<DATABRICKS_CLIENT_ID>/spin-wheel-state/`, written as the app's own service
 principal with the credentials Apps injects. No grant, no group membership, no extra scope. It is also
 *auditable*: an admin can list, read and back up a workspace file, and cannot see a file inside a container.
 

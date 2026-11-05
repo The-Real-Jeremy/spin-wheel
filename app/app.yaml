@@ -18,4 +18,4 @@ env:
   - name: SPINDOWN_EXPONENT
     value: "3.4"
   - name: BUILD_ID
-    value: "dev-prize-wheel"
+    value: "dev-spin-wheel"

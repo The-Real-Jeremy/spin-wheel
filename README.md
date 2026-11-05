@@ -60,7 +60,7 @@ Deploy it somewhere else with the host-free target:
 
 ```bash
 DATABRICKS_CONFIG_PROFILE=<their-profile> databricks bundle deploy -t portable \
-  --var app_name=prize-wheel --var event_name="Their Event"
+  --var app_name=spin-wheel --var event_name="Their Event"
 ```
 
 ### Without the CLI (UI only, also air-gapped)
@@ -81,13 +81,13 @@ are stored under the **catalog's** service principal, so they are separate from 
 PORT=8731 python3 app/app.py          # http://127.0.0.1:8731
 ```
 
-With no workspace credentials it keeps its state in `/tmp/prize-wheel-state`, which is **ephemeral** — both
+With no workspace credentials it keeps its state in `/tmp/spin-wheel-state`, which is **ephemeral** — both
 pages say so in the loudest element they have. To exercise the real workspace store from a laptop:
 
 ```bash
 DATABRICKS_HOST=https://<workspace>.cloud.databricks.com \
 SW_DEV_TOKEN=$(databricks auth token -p <profile> | python3 -c 'import json,sys;print(json.load(sys.stdin)["access_token"])') \
-STATE_PATH=/Users/you@example.com/prize-wheel-dev PORT=8731 python3 app/app.py
+STATE_PATH=/Users/you@example.com/spin-wheel-dev PORT=8731 python3 app/app.py
 ```
 
 ---
@@ -144,7 +144,7 @@ the wheel will be.
 ## Where the setup is kept, and why
 
 The prize list and the uploaded pictures live in the **app's own service principal's workspace home**,
-`/Users/<DATABRICKS_CLIENT_ID>/prize-wheel-state/`, reached over the Workspace API with the credentials Apps
+`/Users/<DATABRICKS_CLIENT_ID>/spin-wheel-state/`, reached over the Workspace API with the credentials Apps
 injects into every container. No grant, no group membership, no extra `user_api_scopes`.
 
 **A container filesystem would lose them.** Measured on this rig: `apps deploy` happened to preserve a local
@@ -154,7 +154,7 @@ passes on a store that would still lose everything before the event.
 **Proven, not asserted** (run it yourself; it prints its own evidence):
 
 ```bash
-python3 tools/prove_durability.py prize-wheel --profile <profile>
+python3 tools/prove_durability.py spin-wheel --profile <profile>
 ```
 
 configures prizes, uploads a picture, runs `apps stop` + `apps start`, and checks the prize list and the
@@ -162,7 +162,7 @@ picture come back byte-identical. It restores whatever was configured before it 
 
 > ⛔ **`app_name` is the app's identity, not a label.** Changing it makes Terraform destroy and recreate the
 > app, which mints a **new service principal** — and since the prize list lives under that principal's home,
-> a rename orphans every configured prize and picture. It was chosen on 2026-09-23 and must not change.
+> a rename orphans every configured prize and picture. Pick it once (the default is `spin-wheel`, the same name the DEPLOY notebook uses) and keep it.
 
 ---
 

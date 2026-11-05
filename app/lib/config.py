@@ -27,7 +27,7 @@ class Config:
         e = env or os.environ
 
         # ── identity / branding ────────────────────────────────────────────────────────────────────
-        self.app_name = _env("DATABRICKS_APP_NAME") or _env("APP_NAME") or "prize-wheel"
+        self.app_name = _env("DATABRICKS_APP_NAME") or _env("APP_NAME") or "spin-wheel"
         self.event_name = _env("EVENT_NAME", "Spin to Win")
         self.build_id = _env("BUILD_ID", "local")
         self.theme = _env("THEME", "midnight")
@@ -66,7 +66,7 @@ class Config:
             f"/Users/{self.client_id}/{self.app_name}-state" if self.client_id else "")
         # Fallback for a laptop with no credentials at all: a local directory, which is EPHEMERAL in a
         # container and says so everywhere it surfaces.
-        self.local_state_dir = _env("LOCAL_STATE_DIR", "/tmp/prize-wheel-state")
+        self.local_state_dir = _env("LOCAL_STATE_DIR", "/tmp/spin-wheel-state")
 
         self.port = int(_env("DATABRICKS_APP_PORT", _env("PORT", "8000")))
 
