@@ -12,10 +12,10 @@ Everything the app needs is in this repo: standard-library Python only. Two ways
    if you want a different name), then **Run all**.
 4. The last cell prints the **app URL**.
 
-### B) Install as a child of the [App Catalog](https://github.com/The-Real-Jeremy/app-catalog)
-1. Install the App Catalog first (its README, same four steps), so `app-catalog-main/` is in your workspace.
+### B) Install as a child of the [App-ception](https://github.com/The-Real-Jeremy/app-ception)
+1. Install the App-ception first (its README, same four steps), so `app-ception-main/` is in your workspace.
 2. On this GitHub page: **Code → Download ZIP** (`spin-wheel-main.zip`).
-3. In Databricks: open **the same folder that holds `app-catalog-main/`** → **⋮ → Import** → drop the `.zip`.
+3. In Databricks: open **the same folder that holds `app-ception-main/`** → **⋮ → Import** → drop the `.zip`.
    It unzips into `spin-wheel-main/` next to the catalog.
 4. Open **`spin-wheel-main/DEPLOY`**, attach **Serverless**, leave **mode = `child`** (`catalog_folder` is filled in
    for you), then **Run all**. It copies the app into the catalog's `child_apps/spin_wheel/`, adds the scopes the app
@@ -73,10 +73,10 @@ DATABRICKS_CONFIG_PROFILE=<their-profile> databricks bundle deploy -t portable \
 ### Without the CLI (UI only, also air-gapped)
 See **Install** at the top: the `DEPLOY` notebook does both paths from the browser.
 
-### As a child of the [App Catalog](https://github.com/The-Real-Jeremy/app-catalog) (CLI alternative)
+### As a child of the [App-ception](https://github.com/The-Real-Jeremy/app-ception) (CLI alternative)
 ```bash
-rsync -a --exclude .git spin-wheel/ <app-catalog>/child_apps/spin_wheel/
-cd <app-catalog> && npm run deploy
+rsync -a --exclude .git spin-wheel/ <app-ception>/child_apps/spin_wheel/
+cd <app-ception> && npm run deploy
 ```
 The catalog finds the app root through `databricks.yml` (`app/`), runs `python app.py` on its own port
 under `/apps/spin_wheel/`, and takes the card text from `catalog.yaml`. Inside the catalog the prizes

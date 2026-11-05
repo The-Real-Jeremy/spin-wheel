@@ -3,7 +3,7 @@
 # MAGIC # Deploy Spin to Win (browser only)
 # MAGIC
 # MAGIC Two ways, chosen with the **mode** widget:
-# MAGIC - **child**: add it to an App Catalog that you deployed from `app-catalog-main/` (the default).
+# MAGIC - **child**: add it to App-ception, deployed from `app-ception-main/` (the default).
 # MAGIC   It copies this folder into the catalog's `child_apps/spin_wheel/`, adds the scopes this app needs to the
 # MAGIC   catalog app, and redeploys the catalog.
 # MAGIC - **standalone**: deploy it as its own Databricks App.
@@ -17,13 +17,15 @@ import os, re, shutil, time, json
 ctx = dbutils.notebook.entry_point.getDbutils().notebook().getContext()
 SRC = "/Workspace" + os.path.dirname(ctx.notebookPath().get())
 PARENT = os.path.dirname(SRC)
-# Prefer the folder named exactly app-catalog-main (an old copy renamed aside must not win).
-_cands = [d for d in sorted(os.listdir(PARENT)) if d.startswith("app-catalog") and os.path.isfile(os.path.join(PARENT, d, "catalog", "server.mjs"))]
-guess = os.path.join(PARENT, "app-catalog-main") if "app-catalog-main" in _cands else (os.path.join(PARENT, _cands[0]) if _cands else "")
+# The App-ception folder next to this one: app-ception-main, then the pre-rename app-catalog-main, then the
+# first sibling folder that holds catalog/server.mjs (an old copy renamed aside must not beat the real one).
+_cands = [d for d in sorted(os.listdir(PARENT)) if os.path.isfile(os.path.join(PARENT, d, "catalog", "server.mjs"))]
+guess = next((os.path.join(PARENT, d) for d in ("app-ception-main", "app-catalog-main") if d in _cands),
+             os.path.join(PARENT, _cands[0]) if _cands else "")
 
 dbutils.widgets.dropdown("mode", "child", ["child", "standalone"], "1. Mode")
-dbutils.widgets.text("catalog_folder", guess, "2. (child) App Catalog folder")
-dbutils.widgets.text("catalog_app_name", "app-catalog", "3. (child) App Catalog app name")
+dbutils.widgets.text("catalog_folder", guess, "2. (child) App-ception folder")
+dbutils.widgets.text("catalog_app_name", "app-ception", "3. (child) App-ception app name")
 dbutils.widgets.text("budget_policy_id", "", "5. (standalone) Budget policy id, if your workspace requires one")
 dbutils.widgets.text("standalone_app_name", "spin-wheel", "4. (standalone) App name")
 MODE = dbutils.widgets.get("mode")
@@ -179,7 +181,7 @@ if MODE == "child":
     CAT = dbutils.widgets.get("catalog_folder").strip().rstrip("/")
     CAT_APP = dbutils.widgets.get("catalog_app_name").strip()
     assert CAT and os.path.isfile(f"{CAT}/catalog/server.mjs"), \
-        f"catalog_folder must be the App Catalog folder (with catalog/server.mjs); got {CAT!r}. Import app-catalog-main.zip first."
+        f"catalog_folder must be the App-ception folder (with catalog/server.mjs); got {CAT!r}. Import app-ception-main.zip first."
     dest = f"{CAT}/child_apps/{CHILD}"
     if os.path.exists(dest):   # keep the previous copy, OUTSIDE child_apps so it is not discovered as an app
         bak = f"{CAT}/.bak-child-{CHILD}-{time.strftime('%Y%m%d-%H%M%S')}"
@@ -197,7 +199,10 @@ if MODE == "child":
     print(f"copied {n_dst} files into {dest}")
     # Child mode never creates or replaces an app: the child runs INSIDE the existing catalog app.
     a = get_app(CAT_APP)
-    assert a is not None, f"no app {CAT_APP!r}: deploy the App Catalog first (its DEPLOY notebook), or set catalog_app_name"
+    if a is None and CAT_APP == "app-ception" and get_app("app-catalog") is not None:
+        CAT_APP, a = "app-catalog", get_app("app-catalog")   # an install made before the rename
+        print("Using the pre-rename app 'app-catalog' (same URL and grants). Set catalog_app_name to choose another.")
+    assert a is not None, f"no app {CAT_APP!r}: deploy App-ception first (its DEPLOY notebook), or set catalog_app_name"
     if SCOPES - (set(a.get("user_api_scopes") or []) - DEFAULT_SCOPES):
         add_scopes(CAT_APP, wait_compute(CAT_APP, {"ACTIVE", "STOPPED", "ERROR"}), SCOPES)
     a = deploy(CAT_APP, CAT)
